@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Image Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #search-results img {
+            max-width: 200px;
+            margin: 10px;
+        }
+        #source-links {
+            margin-top: 20px;
+        }
+        .source-link {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Free Image Search</h1>
+    <input type="text" id="search-query" placeholder="Enter search keyword">
+    <button onclick="searchImages()">Search</button>
+    <div id="search-results"></div>
+    <div id="source-links">
+        <h2>Image Sources</h2>
+        <div class="source-link"><a href="https://www.irasutoya.com" target="_blank">Irasutoya</a></div>
+        <div class="source-link"><a href="https://www.pexels.com" target="_blank">Pexels</a></div>
+        <div class="source-link"><a href="https://pixabay.com" target="_blank">Pixabay</a></div>
+    </div>
+
+    <script>
+        async function searchImages() {
+            const query = document.getElementById('search-query').value;
+            console.log('Searching for:', query);
+            const response = await fetch(`YOUR_GOOGLE_APPS_SCRIPT_DEPLOYMENT_URL?query=${encodeURIComponent(query)}`);
+            console.log('Response status:', response.status);
+
+            if (!response.ok) {
+                console.error('Error fetching images:', response.statusText);
+                return;
+            }
+
+            const imageResults = await response.json();
+            console.log('Images received:', imageResults);
+
+            const resultsDiv = document.getElementById('search-results');
+            resultsDiv.innerHTML = '';
+
+            imageResults.forEach((result, index) => {
+                const imgElement = document.createElement('img');
+                imgElement.src = result.url;
+                imgElement.alt = result.source;
+                resultsDiv.appendChild(imgElement);
+            });
+        }
+    </script>
+</body>
+</html>
